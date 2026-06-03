@@ -4,6 +4,7 @@
 	"private": true,
 	"license": "MIT",
 	"scripts": {
+		"build": "storybook build public --output-dir build",
 		"format": "prettier --write --ignore-path=../../.prettierignore .",
 		"lint": "eslint \"src\"",
 		"storybook": "PUBLIC_CHROMATIC=true storybook dev -p 5003 public"
