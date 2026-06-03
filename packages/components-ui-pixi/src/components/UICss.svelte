@@ -163,7 +163,9 @@
 	let isSettingsOpen = $state(menuOpen ?? false);
 	let isBetOptionsOpen = $state(betOptionsOpen);
 	let isAutobetOptionsOpen = $state(autobetOptionsOpen);
-	let selectedAutobetRounds = $state(autoSpinCount ?? (autoSpinActive ? stateUi.autoSpinsText : null));
+	let selectedAutobetRounds = $state(
+		autoSpinCount ?? (autoSpinActive ? stateUi.autoSpinsText : null),
+	);
 	let isFastModeActive = $state(turboActive ?? stateBet.isTurbo);
 	let isBonusModalOpen = $state(bonusModalOpen || bonusConfirmationOpen);
 	let pendingBonus = $state(null);
@@ -192,10 +194,14 @@
 	const selectedBetIndex = $derived(BET_OPTIONS.indexOf(selectedBet));
 	const selectedBetValue = $derived(parseCurrencyValue(selectedBet));
 	const userBalanceValue = $derived(stateBet.balanceAmount || FALLBACK_USER_BALANCE);
-	const userBalanceLabel = $derived(balance ?? formatCurrencyValue(userBalanceValue).replace('.00', ''));
+	const userBalanceLabel = $derived(
+		balance ?? formatCurrencyValue(userBalanceValue).replace('.00', ''),
+	);
 	const winLabel = $derived(win ?? formatCurrencyValue(stateBet.winBookEventAmount || 143));
 	const canDecreaseBet = $derived(selectedBetIndex > 0);
-	const canIncreaseBet = $derived(selectedBetIndex > -1 && selectedBetIndex < BET_OPTIONS.length - 1);
+	const canIncreaseBet = $derived(
+		selectedBetIndex > -1 && selectedBetIndex < BET_OPTIONS.length - 1,
+	);
 	const activeBonus = $derived(BONUS_OPTIONS.find((bonus) => bonus.name === activeBonusName));
 	const hasActiveBonus = $derived(activeBonusName !== null);
 	const isIdle = $derived(context.stateXstateDerived?.isIdle?.() ?? true);
@@ -207,14 +213,16 @@
 			const priceValue = selectedBetValue * bonus.multiplier;
 			const isBonusActive = activeBonusName === bonus.name;
 			const isBonusPurchased = purchasedBonusNames.includes(bonus.name);
-			const actionType = bonus.actionType === 'buy' && isBonusPurchased ? 'activate' : bonus.actionType;
+			const actionType =
+				bonus.actionType === 'buy' && isBonusPurchased ? 'activate' : bonus.actionType;
 
 			return {
 				...bonus,
 				actionType,
 				priceValue,
 				priceLabel: formatCurrencyValue(priceValue),
-				isUnaffordable: priceValue > userBalanceValue && !isBonusActive && actionType !== 'activate',
+				isUnaffordable:
+					priceValue > userBalanceValue && !isBonusActive && actionType !== 'activate',
 			};
 		}),
 	);
@@ -252,7 +260,9 @@
 		}),
 	);
 	const betGridClassName = $derived(
-		betLayout.mode === 'modal' || betLayout.gridColumns === 'compact' ? 'bet-grid-compact' : 'bet-grid-wide',
+		betLayout.mode === 'modal' || betLayout.gridColumns === 'compact'
+			? 'bet-grid-compact'
+			: 'bet-grid-wide',
 	);
 
 	function getGameBoundsSnapshot(gameElement) {
@@ -357,7 +367,10 @@
 		);
 
 		return {
-			mode: fitsPreferredWidth && canFitAbove && Math.abs(left - unclampedLeft) < 1 ? 'anchored' : 'repositioned',
+			mode:
+				fitsPreferredWidth && canFitAbove && Math.abs(left - unclampedLeft) < 1
+					? 'anchored'
+					: 'repositioned',
 			left,
 			top,
 			width,
@@ -579,7 +592,9 @@
 	function measurePopoverPanels() {
 		popoverPanelSizes = {
 			bet: isBetOptionsOpen ? getPanelSize(betOptionsPopoverRef) : popoverPanelSizes.bet,
-			autobet: isAutobetOptionsOpen ? getPanelSize(autobetOptionsPopoverRef) : popoverPanelSizes.autobet,
+			autobet: isAutobetOptionsOpen
+				? getPanelSize(autobetOptionsPopoverRef)
+				: popoverPanelSizes.autobet,
 		};
 	}
 
@@ -715,7 +730,11 @@
 				>
 					<span class="toggle-icon">
 						<svg class="toggle-primary" class:toggle-hidden={hasActiveBonus} viewBox="0 0 24 24">
-							<path fill-rule="evenodd" clip-rule="evenodd" d="M16.3234 0.0866699L15.6452 9.04525H23.706L10.6766 23.9133L11.3548 14.9548H3.29402L16.3234 0.0866699Z" />
+							<path
+								fill-rule="evenodd"
+								clip-rule="evenodd"
+								d="M16.3234 0.0866699L15.6452 9.04525H23.706L10.6766 23.9133L11.3548 14.9548H3.29402L16.3234 0.0866699Z"
+							/>
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M2 4H9V6H2V4Z" />
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M3 18H9V20H3V18Z" />
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M0 8H4V10H0V8Z" />
@@ -734,7 +753,9 @@
 						</div>
 						<div>
 							<span>Free spins</span>
-							<strong>{stateUi.freeSpinCounterCurrent || 1}/{stateUi.freeSpinCounterTotal || 4}</strong>
+							<strong
+								>{stateUi.freeSpinCounterCurrent || 1}/{stateUi.freeSpinCounterTotal || 4}</strong
+							>
 						</div>
 					</div>
 				{:else}
@@ -758,13 +779,19 @@
 						>
 							{#if selectedAutobetRounds}
 								<span class="autobet-count">
-									<span class:autobet-count-small={selectedAutobetRounds > 99} class:autobet-count-infinity={selectedAutobetRounds === '∞'}>
-										{selectedAutobetRounds}
-									</span>
+									{#if selectedAutobetRounds === '∞'}
+										{@render AutobetInfinityIcon()}
+									{:else}
+										<span class:autobet-count-small={selectedAutobetRounds > 99}>
+											{selectedAutobetRounds}
+										</span>
+									{/if}
 								</span>
 							{:else}
 								<svg class="spin-icon" viewBox="0 0 24 24">
-									<path d="M23.216,9.216l-1.549-9.297l-3.198,3.198C16.599,1.75,14.356,1,12,1C5.935,1,1,5.935,1,12s4.935,11,11,11 c4.374,0,8.332-2.59,10.084-6.599c0.221-0.506-0.01-1.096-0.516-1.317c-0.505-0.219-1.095,0.01-1.317,0.516 C18.818,18.88,15.579,21,12,21c-4.962,0-9-4.038-9-9s4.038-9,9-9c1.821,0,3.562,0.544,5.039,1.547l-3.12,3.12L23.216,9.216z" />
+									<path
+										d="M23.216,9.216l-1.549-9.297l-3.198,3.198C16.599,1.75,14.356,1,12,1C5.935,1,1,5.935,1,12s4.935,11,11,11 c4.374,0,8.332-2.59,10.084-6.599c0.221-0.506-0.01-1.096-0.516-1.317c-0.505-0.219-1.095,0.01-1.317,0.516 C18.818,18.88,15.579,21,12,21c-4.962,0-9-4.038-9-9s4.038-9,9-9c1.821,0,3.562,0.544,5.039,1.547l-3.12,3.12L23.216,9.216z"
+									/>
 								</svg>
 							{/if}
 						</button>
@@ -778,13 +805,20 @@
 						class="stepper-button mobile-stepper-right"
 					>
 						<svg viewBox="0 0 24 24">
-							<path d="M18,10h-4V6c0-.552-.448-1-1-1h-2c-.552,0-1,.448-1,1v4H6c-.552,0-1,.448-1,1v2c0,.552,.448,1,1,1h4v4c0,.552,.448,1,1,1h2c.552,0,1-.448,1-1v-4h4c.552,0,1-.448,1-1v-2c0-.552-.448-1-1-1Z" />
+							<path
+								d="M18,10h-4V6c0-.552-.448-1-1-1h-2c-.552,0-1,.448-1,1v4H6c-.552,0-1,.448-1,1v2c0,.552,.448,1,1,1h4v4c0,.552,.448,1,1,1h2c.552,0,1-.448,1-1v-4h4c.552,0,1-.448,1-1v-2c0-.552-.448-1-1-1Z"
+							/>
 						</svg>
 					</button>
 				{/if}
 
 				<div class="mobile-icon-grid">
-					<div role="presentation" bind:this={mobileAutobetPopoverRef} onmousedown={stopPropagation} ontouchstart={stopPropagation}>
+					<div
+						role="presentation"
+						bind:this={mobileAutobetPopoverRef}
+						onmousedown={stopPropagation}
+						ontouchstart={stopPropagation}
+					>
 						<button
 							aria-label="Auto bet settings"
 							aria-expanded={isAutobetOptionsOpen}
@@ -793,10 +827,20 @@
 							class="mini-button"
 						>
 							<span class="toggle-icon">
-								<svg class="toggle-primary" class:toggle-hidden={isAutobetOptionsOpen} viewBox="0 0 24 24">
-									<path d="M23,20V4a3,3,0,0,0-3-3H4A3,3,0,0,0,1,4V20a3,3,0,0,0,3,3H20A3,3,0,0,0,23,20ZM10.269,15.943A.5.5,0,0,1,10,15.5v-7a.5.5,0,0,1,.787-.409l5,3.5a.518.518,0,0,1,0,.818l-5,3.5A.5.5,0,0,1,10.269,15.943Z" />
+								<svg
+									class="toggle-primary"
+									class:toggle-hidden={isAutobetOptionsOpen}
+									viewBox="0 0 24 24"
+								>
+									<path
+										d="M23,20V4a3,3,0,0,0-3-3H4A3,3,0,0,0,1,4V20a3,3,0,0,0,3,3H20A3,3,0,0,0,23,20ZM10.269,15.943A.5.5,0,0,1,10,15.5v-7a.5.5,0,0,1,.787-.409l5,3.5a.518.518,0,0,1,0,.818l-5,3.5A.5.5,0,0,1,10.269,15.943Z"
+									/>
 								</svg>
-								<svg class="toggle-active" class:toggle-visible={isAutobetOptionsOpen} viewBox="0 0 24 24">
+								<svg
+									class="toggle-active"
+									class:toggle-visible={isAutobetOptionsOpen}
+									viewBox="0 0 24 24"
+								>
 									<path d={closeIconPath} fill="currentColor" />
 								</svg>
 							</span>
@@ -812,15 +856,39 @@
 							class="settings-button-vertical"
 						>
 							<span class="toggle-icon">
-								<svg class="toggle-primary" class:toggle-hidden={isSettingsOpen} viewBox="0 0 24 24">
-									<circle cx="4" cy="4" r="3" /><circle cx="4" cy="12" r="3" /><circle cx="4" cy="20" r="3" /><path d="M22,2H10C9.4,2,9,2.4,9,3v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1V3C23,2.4,22.6,2,22,2z" /><path d="M22,10H10c-0.6,0-1,0.4-1,1v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1v-2C23,10.4,22.6,10,22,10z" /><path d="M22,18H10c-0.6,0-1,0.4-1,1v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1v-2C23,18.4,22.6,18,22,18z" />
+								<svg
+									class="toggle-primary"
+									class:toggle-hidden={isSettingsOpen}
+									viewBox="0 0 24 24"
+								>
+									<circle cx="4" cy="4" r="3" /><circle cx="4" cy="12" r="3" /><circle
+										cx="4"
+										cy="20"
+										r="3"
+									/><path
+										d="M22,2H10C9.4,2,9,2.4,9,3v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1V3C23,2.4,22.6,2,22,2z"
+									/><path
+										d="M22,10H10c-0.6,0-1,0.4-1,1v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1v-2C23,10.4,22.6,10,22,10z"
+									/><path
+										d="M22,18H10c-0.6,0-1,0.4-1,1v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1v-2C23,18.4,22.6,18,22,18z"
+									/>
 								</svg>
-								<svg class="toggle-active" class:toggle-visible={isSettingsOpen} viewBox="0 0 24 24">
+								<svg
+									class="toggle-active"
+									class:toggle-visible={isSettingsOpen}
+									viewBox="0 0 24 24"
+								>
 									<path d={closeIconPath} fill="currentColor" />
 								</svg>
 							</span>
 						</button>
-						<div role="presentation" onclick={stopPropagation} onmousedown={stopPropagation} class="settings-popover mobile-settings-popover" class:is-open={isSettingsOpen}>
+						<div
+							role="presentation"
+							onclick={stopPropagation}
+							onmousedown={stopPropagation}
+							class="settings-popover mobile-settings-popover"
+							class:is-open={isSettingsOpen}
+						>
 							{@render SettingsMenu()}
 						</div>
 					</div>
@@ -833,7 +901,11 @@
 						class="mini-button"
 						class:is-active={isFastModeActive}
 					>
-						<svg viewBox="0 0 24 24"><path d="M7.35846 1L4.21744 15H9.85269L9.25347 23.8042L21.5906 8.5H14.1938L15.74 1H7.35846Z" /></svg>
+						<svg viewBox="0 0 24 24"
+							><path
+								d="M7.35846 1L4.21744 15H9.85269L9.25347 23.8042L21.5906 8.5H14.1938L15.74 1H7.35846Z"
+							/></svg
+						>
 					</button>
 				</div>
 			</div>
@@ -849,7 +921,13 @@
 						<strong>{winLabel}</strong>
 					</div>
 				{/if}
-				<div role="presentation" class="mobile-bet-anchor" bind:this={mobileFooterBetPopoverRef} onmousedown={stopPropagation} ontouchstart={stopPropagation}>
+				<div
+					role="presentation"
+					class="mobile-bet-anchor"
+					bind:this={mobileFooterBetPopoverRef}
+					onmousedown={stopPropagation}
+					ontouchstart={stopPropagation}
+				>
 					<button
 						aria-label="Bet amount"
 						aria-expanded={isBetOptionsOpen}
@@ -881,14 +959,30 @@
 				>
 					<span class="toggle-icon">
 						<svg class="toggle-primary" class:toggle-hidden={isSettingsOpen} viewBox="0 0 24 24">
-							<circle cx="4" cy="4" r="3" /><circle cx="4" cy="12" r="3" /><circle cx="4" cy="20" r="3" /><path d="M22,2H10C9.4,2,9,2.4,9,3v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1V3C23,2.4,22.6,2,22,2z" /><path d="M22,10H10c-0.6,0-1,0.4-1,1v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1v-2C23,10.4,22.6,10,22,10z" /><path d="M22,18H10c-0.6,0-1,0.4-1,1v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1v-2C23,18.4,22.6,18,22,18z" />
+							<circle cx="4" cy="4" r="3" /><circle cx="4" cy="12" r="3" /><circle
+								cx="4"
+								cy="20"
+								r="3"
+							/><path
+								d="M22,2H10C9.4,2,9,2.4,9,3v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1V3C23,2.4,22.6,2,22,2z"
+							/><path
+								d="M22,10H10c-0.6,0-1,0.4-1,1v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1v-2C23,10.4,22.6,10,22,10z"
+							/><path
+								d="M22,18H10c-0.6,0-1,0.4-1,1v2c0,0.6,0.4,1,1,1h12c0.6,0,1-0.4,1-1v-2C23,18.4,22.6,18,22,18z"
+							/>
 						</svg>
 						<svg class="toggle-active" class:toggle-visible={isSettingsOpen} viewBox="0 0 24 24">
 							<path d={closeIconPath} fill="currentColor" />
 						</svg>
 					</span>
 				</button>
-				<div role="presentation" onclick={stopPropagation} onmousedown={stopPropagation} class="settings-popover desktop-settings-popover" class:is-open={isSettingsOpen}>
+				<div
+					role="presentation"
+					onclick={stopPropagation}
+					onmousedown={stopPropagation}
+					class="settings-popover desktop-settings-popover"
+					class:is-open={isSettingsOpen}
+				>
 					{@render SettingsMenu()}
 				</div>
 			</div>
@@ -915,7 +1009,15 @@
 			>
 				<span class="toggle-icon">
 					<svg class="toggle-primary" class:toggle-hidden={hasActiveBonus} viewBox="0 0 24 24">
-						<path fill-rule="evenodd" clip-rule="evenodd" d="M16.3234 0.0866699L15.6452 9.04525H23.706L10.6766 23.9133L11.3548 14.9548H3.29402L16.3234 0.0866699Z" /><path fill-rule="evenodd" clip-rule="evenodd" d="M2 4H9V6H2V4Z" /><path fill-rule="evenodd" clip-rule="evenodd" d="M3 18H9V20H3V18Z" /><path fill-rule="evenodd" clip-rule="evenodd" d="M0 8H4V10H0V8Z" />
+						<path
+							fill-rule="evenodd"
+							clip-rule="evenodd"
+							d="M16.3234 0.0866699L15.6452 9.04525H23.706L10.6766 23.9133L11.3548 14.9548H3.29402L16.3234 0.0866699Z"
+						/><path fill-rule="evenodd" clip-rule="evenodd" d="M2 4H9V6H2V4Z" /><path
+							fill-rule="evenodd"
+							clip-rule="evenodd"
+							d="M3 18H9V20H3V18Z"
+						/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 8H4V10H0V8Z" />
 					</svg>
 					<svg class="toggle-active" class:toggle-visible={hasActiveBonus} viewBox="0 0 24 24">
 						<path d={closeIconPath} fill="currentColor" />
@@ -939,10 +1041,18 @@
 					{#if showExtras}
 						<div class="label-group">
 							<span>Free spins</span>
-							<strong>{stateUi.freeSpinCounterCurrent || 1}/{stateUi.freeSpinCounterTotal || 4}</strong>
+							<strong
+								>{stateUi.freeSpinCounterCurrent || 1}/{stateUi.freeSpinCounterTotal || 4}</strong
+							>
 						</div>
 					{/if}
-					<div role="presentation" class="desktop-bet-anchor" bind:this={desktopFooterBetPopoverRef} onmousedown={stopPropagation} ontouchstart={stopPropagation}>
+					<div
+						role="presentation"
+						class="desktop-bet-anchor"
+						bind:this={desktopFooterBetPopoverRef}
+						onmousedown={stopPropagation}
+						ontouchstart={stopPropagation}
+					>
 						<button
 							aria-label="Bet amount"
 							aria-expanded={isBetOptionsOpen}
@@ -954,11 +1064,29 @@
 							<strong class:accent-text={hasActiveBonus}>{selectedBet}</strong>
 						</button>
 						<div class="desktop-bet-steppers">
-							<button aria-label="Increase bet amount" type="button" onclick={increaseBet} disabled={!canIncreaseBet}>
-								<svg viewBox="0 0 24 24"><path d="M16.707,13.293l-4-4a1,1,0,0,0-1.414,0l-4,4a1,1,0,1,0,1.414,1.414L12,11.414l3.293,3.293a1,1,0,0,0,1.414-1.414Z" /></svg>
+							<button
+								aria-label="Increase bet amount"
+								type="button"
+								onclick={increaseBet}
+								disabled={!canIncreaseBet}
+							>
+								<svg viewBox="0 0 24 24"
+									><path
+										d="M16.707,13.293l-4-4a1,1,0,0,0-1.414,0l-4,4a1,1,0,1,0,1.414,1.414L12,11.414l3.293,3.293a1,1,0,0,0,1.414-1.414Z"
+									/></svg
+								>
 							</button>
-							<button aria-label="Decrease bet amount" type="button" onclick={decreaseBet} disabled={!canDecreaseBet}>
-								<svg viewBox="0 0 24 24"><path d="M12,15a1,1,0,0,1-.707-.293l-4-4A1,1,0,1,1,8.707,9.293L12,12.586l3.293-3.293a1,1,0,0,1,1.414,1.414l-4,4A1,1,0,0,1,12,15Z" /></svg>
+							<button
+								aria-label="Decrease bet amount"
+								type="button"
+								onclick={decreaseBet}
+								disabled={!canDecreaseBet}
+							>
+								<svg viewBox="0 0 24 24"
+									><path
+										d="M12,15a1,1,0,0,1-.707-.293l-4-4A1,1,0,1,1,8.707,9.293L12,12.586l3.293-3.293a1,1,0,0,1,1.414,1.414l-4,4A1,1,0,0,1,12,15Z"
+									/></svg
+								>
 							</button>
 						</div>
 					</div>
@@ -974,17 +1102,32 @@
 					>
 						{#if selectedAutobetRounds}
 							<span class="autobet-count">
-								<span class:autobet-count-small={selectedAutobetRounds > 99} class:autobet-count-infinity={selectedAutobetRounds === '∞'}>{selectedAutobetRounds}</span>
+								{#if selectedAutobetRounds === '∞'}
+									{@render AutobetInfinityIcon()}
+								{:else}
+									<span class:autobet-count-small={selectedAutobetRounds > 99}
+										>{selectedAutobetRounds}</span
+									>
+								{/if}
 							</span>
 						{:else}
-							<svg class="spin-icon" viewBox="0 0 24 24"><path d="M23.216,9.216l-1.549-9.297l-3.198,3.198C16.599,1.75,14.356,1,12,1C5.935,1,1,5.935,1,12s4.935,11,11,11 c4.374,0,8.332-2.59,10.084-6.599c0.221-0.506-0.01-1.096-0.516-1.317c-0.505-0.219-1.095,0.01-1.317,0.516 C18.818,18.88,15.579,21,12,21c-4.962,0-9-4.038-9-9s4.038-9,9-9c1.821,0,3.562,0.544,5.039,1.547l-3.12,3.12L23.216,9.216z" /></svg>
+							<svg class="spin-icon" viewBox="0 0 24 24"
+								><path
+									d="M23.216,9.216l-1.549-9.297l-3.198,3.198C16.599,1.75,14.356,1,12,1C5.935,1,1,5.935,1,12s4.935,11,11,11 c4.374,0,8.332-2.59,10.084-6.599c0.221-0.506-0.01-1.096-0.516-1.317c-0.505-0.219-1.095,0.01-1.317,0.516 C18.818,18.88,15.579,21,12,21c-4.962,0-9-4.038-9-9s4.038-9,9-9c1.821,0,3.562,0.544,5.039,1.547l-3.12,3.12L23.216,9.216z"
+								/></svg
+							>
 						{/if}
 					</button>
 				</div>
 			</div>
 
 			<div class="desktop-side-actions">
-				<div role="presentation" bind:this={desktopAutobetPopoverRef} onmousedown={stopPropagation} ontouchstart={stopPropagation}>
+				<div
+					role="presentation"
+					bind:this={desktopAutobetPopoverRef}
+					onmousedown={stopPropagation}
+					ontouchstart={stopPropagation}
+				>
 					<button
 						aria-label="Auto bet settings"
 						aria-expanded={isAutobetOptionsOpen}
@@ -993,10 +1136,20 @@
 						class="mini-button desktop-mini-button"
 					>
 						<span class="toggle-icon">
-							<svg class="toggle-primary" class:toggle-hidden={isAutobetOptionsOpen} viewBox="0 0 24 24">
-								<path d="M23,20V4a3,3,0,0,0-3-3H4A3,3,0,0,0,1,4V20a3,3,0,0,0,3,3H20A3,3,0,0,0,23,20ZM10.269,15.943A.5.5,0,0,1,10,15.5v-7a.5.5,0,0,1,.787-.409l5,3.5a.518.518,0,0,1,0,.818l-5,3.5A.5.5,0,0,1,10.269,15.943Z" />
+							<svg
+								class="toggle-primary"
+								class:toggle-hidden={isAutobetOptionsOpen}
+								viewBox="0 0 24 24"
+							>
+								<path
+									d="M23,20V4a3,3,0,0,0-3-3H4A3,3,0,0,0,1,4V20a3,3,0,0,0,3,3H20A3,3,0,0,0,23,20ZM10.269,15.943A.5.5,0,0,1,10,15.5v-7a.5.5,0,0,1,.787-.409l5,3.5a.518.518,0,0,1,0,.818l-5,3.5A.5.5,0,0,1,10.269,15.943Z"
+								/>
 							</svg>
-							<svg class="toggle-active" class:toggle-visible={isAutobetOptionsOpen} viewBox="0 0 24 24">
+							<svg
+								class="toggle-active"
+								class:toggle-visible={isAutobetOptionsOpen}
+								viewBox="0 0 24 24"
+							>
 								<path d={closeIconPath} fill="currentColor" />
 							</svg>
 						</span>
@@ -1010,20 +1163,40 @@
 					class="mini-button desktop-mini-button"
 					class:is-active={isFastModeActive}
 				>
-					<svg viewBox="0 0 24 24"><path d="M7.35846 1L4.21744 15H9.85269L9.25347 23.8042L21.5906 8.5H14.1938L15.74 1H7.35846Z" /></svg>
+					<svg viewBox="0 0 24 24"
+						><path
+							d="M7.35846 1L4.21744 15H9.85269L9.25347 23.8042L21.5906 8.5H14.1938L15.74 1H7.35846Z"
+						/></svg
+					>
 				</button>
 			</div>
 		</div>
 	</div>
 
 	{#if betLayout.mode === 'modal'}
-		<div role="presentation" class="option-modal" class:is-open={isBetOptionsOpen} onclick={() => (isBetOptionsOpen = false)}>
-			<div role="presentation" bind:this={betOptionsPopoverRef} onclick={stopPropagation} style={`width: ${betLayout.width}px; max-height: ${betLayout.maxHeight}px;`} class="options-panel">
+		<div
+			role="presentation"
+			class="option-modal"
+			class:is-open={isBetOptionsOpen}
+			onclick={() => (isBetOptionsOpen = false)}
+		>
+			<div
+				role="presentation"
+				bind:this={betOptionsPopoverRef}
+				onclick={stopPropagation}
+				style={`width: ${betLayout.width}px; max-height: ${betLayout.maxHeight}px;`}
+				class="options-panel"
+			>
 				{@render BetOptions()}
 			</div>
 		</div>
 	{:else}
-		<div role="presentation" class="option-modal mobile-only-modal" class:is-open={isBetOptionsOpen} onclick={() => (isBetOptionsOpen = false)}>
+		<div
+			role="presentation"
+			class="option-modal mobile-only-modal"
+			class:is-open={isBetOptionsOpen}
+			onclick={() => (isBetOptionsOpen = false)}
+		>
 			<div role="presentation" onclick={stopPropagation} class="options-panel">
 				{@render BetOptions()}
 			</div>
@@ -1040,13 +1213,29 @@
 	{/if}
 
 	{#if autobetLayout.mode === 'modal'}
-		<div role="presentation" class="option-modal" class:is-open={isAutobetOptionsOpen} onclick={() => (isAutobetOptionsOpen = false)}>
-			<div role="presentation" bind:this={autobetOptionsPopoverRef} onclick={stopPropagation} style={`width: ${autobetLayout.width}px; max-height: ${autobetLayout.maxHeight}px;`} class="options-panel">
+		<div
+			role="presentation"
+			class="option-modal"
+			class:is-open={isAutobetOptionsOpen}
+			onclick={() => (isAutobetOptionsOpen = false)}
+		>
+			<div
+				role="presentation"
+				bind:this={autobetOptionsPopoverRef}
+				onclick={stopPropagation}
+				style={`width: ${autobetLayout.width}px; max-height: ${autobetLayout.maxHeight}px;`}
+				class="options-panel"
+			>
 				{@render AutobetOptions()}
 			</div>
 		</div>
 	{:else}
-		<div role="presentation" class="option-modal mobile-only-modal" class:is-open={isAutobetOptionsOpen} onclick={() => (isAutobetOptionsOpen = false)}>
+		<div
+			role="presentation"
+			class="option-modal mobile-only-modal"
+			class:is-open={isAutobetOptionsOpen}
+			onclick={() => (isAutobetOptionsOpen = false)}
+		>
 			<div role="presentation" onclick={stopPropagation} class="options-panel">
 				{@render AutobetOptions()}
 			</div>
@@ -1064,7 +1253,12 @@
 
 	{#if isBonusModalOpen}
 		<div class="bonus-overlay">
-			<button aria-label="Close bonus selection" type="button" onclick={closeBonusModal} class="bonus-close-button">
+			<button
+				aria-label="Close bonus selection"
+				type="button"
+				onclick={closeBonusModal}
+				class="bonus-close-button"
+			>
 				<svg viewBox="0 0 24 24"><path d={closeIconPath} fill="currentColor" /></svg>
 			</button>
 
@@ -1073,7 +1267,11 @@
 					{#each pricedBonusOptions as bonus, itemIndex}
 						{@const isBonusActive = activeBonusName === bonus.name}
 						{@const isActionDisabled = bonus.isUnaffordable}
-						<article style={`animation-delay: ${itemIndex * 0.05}s`} class="bonus-card" class:is-disabled={bonus.isUnaffordable}>
+						<article
+							style={`animation-delay: ${itemIndex * 0.05}s`}
+							class="bonus-card"
+							class:is-disabled={bonus.isUnaffordable}
+						>
 							<i></i>
 							<div class="bonus-card-media"></div>
 							<div class="bonus-card-body">
@@ -1107,33 +1305,87 @@
 					<span>Balance</span>
 					<strong>{userBalanceLabel}</strong>
 				</div>
-				<div role="presentation" id="bonus-modal-bet-controls" bind:this={bonusBetPopoverRef} onmousedown={stopPropagation} ontouchstart={stopPropagation} class="bonus-bet-controls">
-					<button aria-label="Decrease bonus bet amount" type="button" onclick={decreaseBet} disabled={!canDecreaseBet}>
+				<div
+					role="presentation"
+					id="bonus-modal-bet-controls"
+					bind:this={bonusBetPopoverRef}
+					onmousedown={stopPropagation}
+					ontouchstart={stopPropagation}
+					class="bonus-bet-controls"
+				>
+					<button
+						aria-label="Decrease bonus bet amount"
+						type="button"
+						onclick={decreaseBet}
+						disabled={!canDecreaseBet}
+					>
 						<svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="4" rx="1" ry="1" /></svg>
 					</button>
-					<button aria-label="Bet amount" aria-expanded={isBetOptionsOpen} type="button" onclick={() => toggleBetOptions('bonusModal')} class="bonus-bet-label">
+					<button
+						aria-label="Bet amount"
+						aria-expanded={isBetOptionsOpen}
+						type="button"
+						onclick={() => toggleBetOptions('bonusModal')}
+						class="bonus-bet-label"
+					>
 						<span>Bet</span>
 						<strong class:accent-text={hasActiveBonus}>{selectedBet}</strong>
 					</button>
-					<button aria-label="Increase bonus bet amount" type="button" onclick={increaseBet} disabled={!canIncreaseBet}>
-						<svg viewBox="0 0 24 24"><path d="M18,10h-4V6c0-.552-.448-1-1-1h-2c-.552,0-1,.448-1,1v4H6c-.552,0-1,.448-1,1v2c0,.552,.448,1,1,1h4v4c0,.552,.448,1,1,1h2c.552,0,1-.448,1-1v-4h4c.552,0,1-.448,1-1v-2c0-.552-.448-1-1-1Z" /></svg>
+					<button
+						aria-label="Increase bonus bet amount"
+						type="button"
+						onclick={increaseBet}
+						disabled={!canIncreaseBet}
+					>
+						<svg viewBox="0 0 24 24"
+							><path
+								d="M18,10h-4V6c0-.552-.448-1-1-1h-2c-.552,0-1,.448-1,1v4H6c-.552,0-1,.448-1,1v2c0,.552,.448,1,1,1h4v4c0,.552,.448,1,1,1h2c.552,0,1-.448,1-1v-4h4c.552,0,1-.448,1-1v-2c0-.552-.448-1-1-1Z"
+							/></svg
+						>
 					</button>
 				</div>
 			</div>
 
 			{#if pendingBonus}
-				<div role="presentation" class="bonus-confirm-backdrop" onclick={cancelBonusConfirmationFromBackdrop}>
-					<div role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="bonus-confirmation-title" class="bonus-confirm-dialog">
+				<div
+					role="presentation"
+					class="bonus-confirm-backdrop"
+					onclick={cancelBonusConfirmationFromBackdrop}
+				>
+					<div
+						role="dialog"
+						tabindex="-1"
+						aria-modal="true"
+						aria-labelledby="bonus-confirmation-title"
+						class="bonus-confirm-dialog"
+					>
 						<div class="bonus-confirm-media"></div>
 						<div class="bonus-confirm-body">
 							<h3 id="bonus-confirmation-title">{pendingBonus.name}</h3>
 							<p>
-								{pendingBonus.actionType === 'activate' ? pendingBonus.description : `${pendingBonus.priceLabel} will be subtracted from your balance`}
+								{pendingBonus.actionType === 'activate'
+									? pendingBonus.description
+									: `${pendingBonus.priceLabel} will be subtracted from your balance`}
 							</p>
 							<div>
-								<button type="button" onclick={cancelBonusConfirmation} class="confirm-cancel-button">Cancel</button>
-								<button type="button" onclick={confirmBonusAction} class="confirm-action-button" class:activate={pendingBonus.actionType === 'activate'}>
-									<span>{pendingBonus.actionType === 'activate' ? (activeBonusName === pendingBonus.name ? 'Deactivate' : 'Activate') : 'Buy'}</span>
+								<button
+									type="button"
+									onclick={cancelBonusConfirmation}
+									class="confirm-cancel-button">Cancel</button
+								>
+								<button
+									type="button"
+									onclick={confirmBonusAction}
+									class="confirm-action-button"
+									class:activate={pendingBonus.actionType === 'activate'}
+								>
+									<span
+										>{pendingBonus.actionType === 'activate'
+											? activeBonusName === pendingBonus.name
+												? 'Deactivate'
+												: 'Activate'
+											: 'Buy'}</span
+									>
 								</button>
 							</div>
 						</div>
@@ -1144,52 +1396,134 @@
 	{/if}
 </div>
 
+{#snippet AutobetInfinityIcon()}
+	<svg
+		class="autobet-count-infinity-icon"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		aria-hidden="true"
+		focusable="false"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<path
+			d="M7.40438 17.3279C6.55638 17.3279 5.82038 17.1759 5.19638 16.8719C4.58838 16.5679 4.07638 16.1599 3.66037 15.6479C3.26037 15.1359 2.96438 14.5599 2.77238 13.9199C2.58038 13.2799 2.48438 12.6399 2.48438 11.9999C2.48438 11.3439 2.58038 10.7039 2.77238 10.0799C2.96438 9.43988 3.26037 8.86387 3.66037 8.35188C4.06037 7.83988 4.57238 7.43187 5.19638 7.12787C5.82038 6.82387 6.55638 6.67188 7.40438 6.67188C8.12438 6.67188 8.75638 6.81588 9.30038 7.10388C9.84438 7.37587 10.3324 7.73588 10.7644 8.18388C11.2124 8.63188 11.6284 9.11188 12.0124 9.62388C12.3964 9.11188 12.8044 8.63188 13.2364 8.18388C13.6844 7.73588 14.1804 7.37587 14.7244 7.10388C15.2684 6.81588 15.8844 6.67188 16.5724 6.67188C17.4364 6.67188 18.1724 6.82387 18.7804 7.12787C19.4044 7.43187 19.9164 7.83988 20.3164 8.35188C20.7324 8.86387 21.0364 9.43988 21.2284 10.0799C21.4204 10.7039 21.5164 11.3439 21.5164 11.9999C21.5164 12.6399 21.4204 13.2799 21.2284 13.9199C21.0364 14.5599 20.7324 15.1359 20.3164 15.6479C19.9164 16.1599 19.4044 16.5679 18.7804 16.8719C18.1724 17.1759 17.4364 17.3279 16.5724 17.3279C15.8844 17.3279 15.2684 17.1999 14.7244 16.9439C14.1804 16.6719 13.6844 16.3119 13.2364 15.8639C12.8044 15.4159 12.3964 14.9439 12.0124 14.4479C11.6284 14.9439 11.2124 15.4159 10.7644 15.8639C10.3324 16.3119 9.84438 16.6719 9.30038 16.9439C8.75638 17.1999 8.12438 17.3279 7.40438 17.3279ZM7.47638 14.4479C7.81238 14.4479 8.12437 14.3599 8.41237 14.1839C8.70037 14.0079 8.96438 13.7919 9.20438 13.5359C9.46038 13.2799 9.67638 13.0159 9.85238 12.7439C10.0284 12.4719 10.1644 12.2479 10.2604 12.0719C10.1644 11.8639 10.0204 11.6239 9.82837 11.3519C9.65237 11.0639 9.43638 10.7839 9.18038 10.5119C8.94038 10.2399 8.67638 10.0159 8.38838 9.83988C8.11638 9.64788 7.81238 9.55188 7.47638 9.55188C6.96438 9.55188 6.50038 9.75988 6.08438 10.1759C5.66838 10.5919 5.46038 11.1999 5.46038 11.9999C5.46038 12.7839 5.66838 13.3919 6.08438 13.8239C6.50038 14.2399 6.96438 14.4479 7.47638 14.4479ZM16.5244 14.4479C17.0524 14.4479 17.5164 14.2399 17.9164 13.8239C18.3324 13.3919 18.5404 12.7839 18.5404 11.9999C18.5404 11.1999 18.3324 10.5919 17.9164 10.1759C17.5004 9.75988 17.0364 9.55188 16.5244 9.55188C16.1884 9.55188 15.8764 9.64788 15.5884 9.83988C15.3004 10.0159 15.0284 10.2399 14.7724 10.5119C14.5324 10.7679 14.3244 11.0399 14.1484 11.3279C13.9724 11.5999 13.8364 11.8399 13.7404 12.0479C13.8364 12.2239 13.9724 12.4479 14.1484 12.7199C14.3244 12.9919 14.5324 13.2639 14.7724 13.5359C15.0284 13.7919 15.3004 14.0079 15.5884 14.1839C15.8764 14.3599 16.1884 14.4479 16.5244 14.4479Z"
+			fill="white"
+		/>
+	</svg>
+{/snippet}
+
 {#snippet SettingsMenu()}
 	<ul class="settings-menu">
 		<li>
 			<button type="button" class="settings-menu-info">
 				<svg viewBox="0 0 24 24">
-					<path d="m16.556,1H7.444L1,7.444v9.111l6.444,6.444h9.111l6.444-6.444V7.444l-6.444-6.444Zm-3.556,17h-2v-6h-2v-2h2.5c.827,0,1.5.673,1.5,1.5v6.5Zm-1-9.5c-.689,0-1.25-.561-1.25-1.25s.561-1.25,1.25-1.25,1.25.561,1.25,1.25-.561,1.25-1.25,1.25Z" />
+					<path
+						d="m16.556,1H7.444L1,7.444v9.111l6.444,6.444h9.111l6.444-6.444V7.444l-6.444-6.444Zm-3.556,17h-2v-6h-2v-2h2.5c.827,0,1.5.673,1.5,1.5v6.5Zm-1-9.5c-.689,0-1.25-.561-1.25-1.25s.561-1.25,1.25-1.25,1.25.561,1.25,1.25-.561,1.25-1.25,1.25Z"
+					/>
 				</svg>
 				<span>Game info</span>
 			</button>
 		</li>
 		<li class="settings-range-row">
-			<button aria-label="Toggle music volume" aria-pressed={musicVolume === 0} type="button" onclick={toggleMusicVolume}>
+			<button
+				aria-label="Toggle music volume"
+				aria-pressed={musicVolume === 0}
+				type="button"
+				onclick={toggleMusicVolume}
+			>
 				<svg viewBox="0 0 24 24">
 					{#if musicVolume === 0}
-						<path d="M23.9196 0.61C23.8696 0.49 23.7996 0.38 23.7096 0.29C23.5096 0.09 23.2396 0 22.9796 0H7.99957C7.44957 0 6.99957 0.45 6.99957 1V15.58L6.88957 15.69C6.19957 15.25 5.37957 14.99 4.49957 14.99C2.01957 14.99 -0.00042969 17.01 -0.00042969 19.49C-0.00042969 20.37 0.25957 21.18 0.69957 21.87L0.28957 22.28C-0.10043 22.67 -0.10043 23.3 0.28957 23.69C0.48957 23.89 0.73957 23.98 0.99957 23.98C1.25957 23.98 1.50957 23.88 1.70957 23.69L2.10957 23.29L8.99957 16.4L17.4096 7.99L23.7096 1.69L23.9996 1.4V0.99C23.9996 0.86 23.9696 0.73 23.9196 0.6V0.61ZM8.99957 13.58V8H14.5796L8.99957 13.58ZM8.99957 19.24V19.5C8.99957 21.98 6.97957 24 4.49957 24C4.41957 24 4.33957 23.98 4.25957 23.98L8.99957 19.24ZM23.9996 4.24V17.5C23.9996 19.98 21.9796 22 19.4996 22C17.0196 22 14.9996 19.98 14.9996 17.5C14.9996 15.02 17.0196 13 19.4996 13C20.4196 13 21.2796 13.28 21.9996 13.76V8H20.2396L23.9996 4.24Z" />
+						<path
+							d="M23.9196 0.61C23.8696 0.49 23.7996 0.38 23.7096 0.29C23.5096 0.09 23.2396 0 22.9796 0H7.99957C7.44957 0 6.99957 0.45 6.99957 1V15.58L6.88957 15.69C6.19957 15.25 5.37957 14.99 4.49957 14.99C2.01957 14.99 -0.00042969 17.01 -0.00042969 19.49C-0.00042969 20.37 0.25957 21.18 0.69957 21.87L0.28957 22.28C-0.10043 22.67 -0.10043 23.3 0.28957 23.69C0.48957 23.89 0.73957 23.98 0.99957 23.98C1.25957 23.98 1.50957 23.88 1.70957 23.69L2.10957 23.29L8.99957 16.4L17.4096 7.99L23.7096 1.69L23.9996 1.4V0.99C23.9996 0.86 23.9696 0.73 23.9196 0.6V0.61ZM8.99957 13.58V8H14.5796L8.99957 13.58ZM8.99957 19.24V19.5C8.99957 21.98 6.97957 24 4.49957 24C4.41957 24 4.33957 23.98 4.25957 23.98L8.99957 19.24ZM23.9996 4.24V17.5C23.9996 19.98 21.9796 22 19.4996 22C17.0196 22 14.9996 19.98 14.9996 17.5C14.9996 15.02 17.0196 13 19.4996 13C20.4196 13 21.2796 13.28 21.9996 13.76V8H20.2396L23.9996 4.24Z"
+						/>
 					{:else}
-						<path d="M23,0H8C7.448,0,7,0.448,7,1v14.762C6.284,15.282,5.425,15,4.5,15C2.019,15,0,17.019,0,19.5S2.019,24,4.5,24 S9,21.981,9,19.5V8h13v5.762C21.284,13.282,20.425,13,19.5,13c-2.481,0-4.5,2.019-4.5,4.5s2.019,4.5,4.5,4.5s4.5-2.019,4.5-4.5V1 C24,0.448,23.552,0,23,0z" />
+						<path
+							d="M23,0H8C7.448,0,7,0.448,7,1v14.762C6.284,15.282,5.425,15,4.5,15C2.019,15,0,17.019,0,19.5S2.019,24,4.5,24 S9,21.981,9,19.5V8h13v5.762C21.284,13.282,20.425,13,19.5,13c-2.481,0-4.5,2.019-4.5,4.5s2.019,4.5,4.5,4.5s4.5-2.019,4.5-4.5V1 C24,0.448,23.552,0,23,0z"
+						/>
 					{/if}
 				</svg>
 			</button>
-			<input aria-label="Music volume" type="range" min="0" max="100" value={musicVolume} oninput={updateMusicVolume} onchange={updateMusicVolume} style={`--range-value: ${musicVolume}%;`} />
+			<input
+				aria-label="Music volume"
+				type="range"
+				min="0"
+				max="100"
+				value={musicVolume}
+				oninput={updateMusicVolume}
+				onchange={updateMusicVolume}
+				style={`--range-value: ${musicVolume}%;`}
+			/>
 		</li>
 		<li class="settings-range-row">
-			<button aria-label="Toggle sound volume" aria-pressed={soundVolume === 0} type="button" onclick={toggleSoundVolume}>
+			<button
+				aria-label="Toggle sound volume"
+				aria-pressed={soundVolume === 0}
+				type="button"
+				onclick={toggleSoundVolume}
+			>
 				<svg viewBox="0 0 24 24">
 					{#if soundVolume === 0}
-						<path d="M10.567,17.675L17.4,22.8c0.176,0.133,0.388,0.2,0.6,0.2c0.152,0,0.306-0.035,0.447-0.105 C18.786,22.725,19,22.379,19,22V9.242L10.567,17.675z" /><path d="M2,17h5L19,5V2c0-0.379-0.214-0.725-0.553-0.895C18.109,0.938,17.703,0.973,17.4,1.2L9.667,7H2 C1.447,7,1,7.447,1,8v8C1,16.553,1.447,17,2,17z" /><path d="M1,24c-0.256,0-0.512-0.098-0.707-0.293c-0.391-0.391-0.391-1.023,0-1.414l22-22 c0.391-0.391,1.023-0.391,1.414,0s0.391,1.023,0,1.414l-22,22C1.512,23.902,1.256,24,1,24z" />
+						<path
+							d="M10.567,17.675L17.4,22.8c0.176,0.133,0.388,0.2,0.6,0.2c0.152,0,0.306-0.035,0.447-0.105 C18.786,22.725,19,22.379,19,22V9.242L10.567,17.675z"
+						/><path
+							d="M2,17h5L19,5V2c0-0.379-0.214-0.725-0.553-0.895C18.109,0.938,17.703,0.973,17.4,1.2L9.667,7H2 C1.447,7,1,7.447,1,8v8C1,16.553,1.447,17,2,17z"
+						/><path
+							d="M1,24c-0.256,0-0.512-0.098-0.707-0.293c-0.391-0.391-0.391-1.023,0-1.414l22-22 c0.391-0.391,1.023-0.391,1.414,0s0.391,1.023,0,1.414l-22,22C1.512,23.902,1.256,24,1,24z"
+						/>
 					{:else}
-						<path d="M14.447,1.105C14.109,0.938,13.703,0.973,13.4,1.2L5.667,7H1C0.447,7,0,7.447,0,8v8c0,0.553,0.447,1,1,1 h4.667l7.733,5.8c0.176,0.133,0.388,0.2,0.6,0.2c0.152,0,0.306-0.035,0.447-0.105C14.786,22.725,15,22.379,15,22V2 C15,1.621,14.786,1.275,14.447,1.105z" /><rect x="18" y="11" width="6" height="2" /><rect x="16.392" y="5" width="6" height="2" transform="matrix(0.8661 -0.4999 0.4999 0.8661 -0.4024 10.4981)" /><rect x="18.392" y="15" width="2" height="6" transform="matrix(0.5 -0.866 0.866 0.5 -5.8923 25.7943)" />
+						<path
+							d="M14.447,1.105C14.109,0.938,13.703,0.973,13.4,1.2L5.667,7H1C0.447,7,0,7.447,0,8v8c0,0.553,0.447,1,1,1 h4.667l7.733,5.8c0.176,0.133,0.388,0.2,0.6,0.2c0.152,0,0.306-0.035,0.447-0.105C14.786,22.725,15,22.379,15,22V2 C15,1.621,14.786,1.275,14.447,1.105z"
+						/><rect x="18" y="11" width="6" height="2" /><rect
+							x="16.392"
+							y="5"
+							width="6"
+							height="2"
+							transform="matrix(0.8661 -0.4999 0.4999 0.8661 -0.4024 10.4981)"
+						/><rect
+							x="18.392"
+							y="15"
+							width="2"
+							height="6"
+							transform="matrix(0.5 -0.866 0.866 0.5 -5.8923 25.7943)"
+						/>
 					{/if}
 				</svg>
 			</button>
-			<input aria-label="Sound volume" type="range" min="0" max="100" value={soundVolume} oninput={updateSoundVolume} onchange={updateSoundVolume} style={`--range-value: ${soundVolume}%;`} />
+			<input
+				aria-label="Sound volume"
+				type="range"
+				min="0"
+				max="100"
+				value={soundVolume}
+				oninput={updateSoundVolume}
+				onchange={updateSoundVolume}
+				style={`--range-value: ${soundVolume}%;`}
+			/>
 		</li>
 	</ul>
 {/snippet}
 
 {#snippet BetOptions()}
 	<h3 class="options-title">Bet amount</h3>
-	<button aria-label="Close bet options" type="button" onclick={() => (isBetOptionsOpen = false)} class="options-close-button">
+	<button
+		aria-label="Close bet options"
+		type="button"
+		onclick={() => (isBetOptionsOpen = false)}
+		class="options-close-button"
+	>
 		<svg viewBox="0 0 24 24"><path d={closeIconPath} fill="currentColor" /></svg>
 	</button>
 	<ul class={`bet-options-grid ${betGridClassName}`}>
 		{#each BET_OPTIONS as item}
 			<li>
-				<button type="button" onclick={() => selectBetOption(item)} class="option-choice" class:is-selected={selectedBet === item}>
+				<button
+					type="button"
+					onclick={() => selectBetOption(item)}
+					class="option-choice"
+					class:is-selected={selectedBet === item}
+				>
 					<span>{item}</span>
 				</button>
 			</li>
@@ -1199,13 +1533,23 @@
 
 {#snippet AutobetOptions()}
 	<h3 class="options-title">Autoplay rounds</h3>
-	<button aria-label="Close autoplay options" type="button" onclick={() => (isAutobetOptionsOpen = false)} class="options-close-button">
+	<button
+		aria-label="Close autoplay options"
+		type="button"
+		onclick={() => (isAutobetOptionsOpen = false)}
+		class="options-close-button"
+	>
 		<svg viewBox="0 0 24 24"><path d={closeIconPath} fill="currentColor" /></svg>
 	</button>
 	<ul class="autobet-options-grid">
 		{#each AUTOBET_OPTIONS as item}
 			<li>
-				<button type="button" onclick={() => selectAutobetOption(item)} class="autobet-choice" class:is-selected={selectedAutobetRounds === item}>
+				<button
+					type="button"
+					onclick={() => selectAutobetOption(item)}
+					class="autobet-choice"
+					class:is-selected={selectedAutobetRounds === item}
+				>
 					<span>{item}</span>
 				</button>
 			</li>
@@ -1214,23 +1558,21 @@
 {/snippet}
 
 <style>
-
 	:root {
 		font-size: 16px;
 	}
 	.ui-root {
 		--ui-accent: #fa0000;
-		--ui-bonus-accent: #FFE300;
+		--ui-bonus-accent: #ffe300;
 		--ui-black: rgba(0, 0, 0, 0.7);
 		--ui-black-strong: rgba(0, 0, 0, 0.95);
 		--ui-white-soft: rgba(255, 255, 255, 0.7);
 		--ui-border: rgba(0, 0, 0, 0.7);
-		--ui-shadow-glass: inset 0 0 0 1px rgba(255, 255, 255, 0.2),
-			inset 0 1px 0 0 rgba(255, 255, 255, 0.55),
-			inset 0 -2px 4px 0 rgba(0, 0, 0, 0.25),
-			inset 0 -2px 0 2px rgba(0, 0, 0, 0.25);
-		--ui-shadow-panel: inset 0 0 0 1px rgba(255, 255, 255, 0.075),
-			inset 0 1px 1px 0 rgba(255, 255, 255, 0.125);
+		--ui-shadow-glass:
+			inset 0 0 0 1px rgba(255, 255, 255, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.55),
+			inset 0 -2px 4px 0 rgba(0, 0, 0, 0.25), inset 0 -2px 0 2px rgba(0, 0, 0, 0.25);
+		--ui-shadow-panel:
+			inset 0 0 0 1px rgba(255, 255, 255, 0.075), inset 0 1px 1px 0 rgba(255, 255, 255, 0.125);
 		--ui-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 		position: absolute;
@@ -1442,8 +1784,11 @@
 		font-size: 0.875rem;
 	}
 
-	.autobet-count-infinity {
-		font-size: 2.25rem;
+	.autobet-count-infinity-icon {
+		width: 1.5rem;
+		height: 1.5rem;
+		display: block;
+		flex-shrink: 0;
 	}
 
 	.mobile-icon-grid {
@@ -1459,7 +1804,7 @@
 	.mini-button {
 		width: 2rem;
 		height: 2rem;
-		border-radius: .3125rem;
+		border-radius: 0.3125rem;
 
 		> svg {
 			width: 66.666%;
@@ -1479,7 +1824,7 @@
 	.settings-button-vertical {
 		width: 2rem;
 		height: 4.25rem;
-		border-radius: .3125rem;
+		border-radius: 0.3125rem;
 	}
 
 	.toggle-icon {
@@ -1611,17 +1956,25 @@
 		flex-direction: column;
 		align-items: flex-end;
 		gap: 0;
-		border-radius: .3125rem;
+		border-radius: 0.3125rem;
 		padding: 0.125rem 0.25rem;
 		line-height: 1;
 		text-align: right;
+	}
 
+	.bet-label-button,
+	.bonus-bet-label {
 		&:hover {
 			background: rgba(255, 255, 255, 0.25);
 
 			> strong {
 				text-decoration: underline;
 			}
+		}
+		&:active {
+			transform: scale(0.98);
+			background: rgba(255, 255, 255, 0.1);
+			transition-duration: 0ms;
 		}
 	}
 
@@ -1711,7 +2064,13 @@
 			height: 0.5rem;
 			appearance: none;
 			border-radius: 999px;
-			background: linear-gradient(to right, #ffffff 0%, #ffffff var(--range-value), rgba(255, 255, 255, 0.16) var(--range-value), rgba(255, 255, 255, 0.16) 100%);
+			background: linear-gradient(
+				to right,
+				#ffffff 0%,
+				#ffffff var(--range-value),
+				rgba(255, 255, 255, 0.16) var(--range-value),
+				rgba(255, 255, 255, 0.16) 100%
+			);
 			cursor: pointer;
 			outline: none;
 
@@ -1878,12 +2237,14 @@
 		&.is-selected {
 			background: #ffffff;
 			color: #000000;
-			box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.125), inset 0 1px 1px 0 rgba(255, 255, 255, 0.125);
+			box-shadow:
+				inset 0 0 0 1px rgba(255, 255, 255, 0.125),
+				inset 0 1px 1px 0 rgba(255, 255, 255, 0.125);
 		}
 	}
 
 	.option-choice {
-		border-radius: .3125rem;
+		border-radius: 0.3125rem;
 		padding: 0.25rem 0.75rem;
 		font-size: 1rem;
 	}
@@ -1924,13 +2285,20 @@
 		background: rgba(0, 0, 0, 0.5);
 		color: #ffffff;
 
-		&:hover {
-			background: rgba(255, 255, 255, 0.1);
-		}
-
 		svg {
 			width: 66.666%;
 			height: 66.666%;
+		}
+	}
+
+	.bonus-close-button,
+	.bonus-bet-controls > button:not(.bonus-bet-label) {
+		&:hover {
+			background: rgba(255, 255, 255, 0.1);
+		}
+		&:active {
+			transform: scale(0.98);
+			transition-duration: 0ms;
 		}
 	}
 
@@ -2038,6 +2406,10 @@
 		color: #ffffff;
 		font-weight: 700;
 		line-height: 1;
+		min-height: 2.25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.bonus-price-large {
@@ -2061,13 +2433,17 @@
 		font-size: 0.875rem;
 		font-weight: 700;
 		text-transform: uppercase;
-		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.125), inset 0 1px 0 0 rgba(255, 255, 255, 0.25), inset 0 -2px 0 0 rgba(0, 0, 0, 0.25);
+		box-shadow:
+			inset 0 0 0 1px rgba(255, 255, 255, 0.125),
+			inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
+			inset 0 -2px 0 0 rgba(0, 0, 0, 0.25);
 		transition:
 			transform 200ms ease,
 			filter 200ms ease;
 
 		span {
 			color: #ffffff;
+			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 		}
 
 		&.activate {
@@ -2087,7 +2463,10 @@
 				color: #000000;
 			}
 		}
+	}
 
+	.bonus-action-button,
+	.confirm-action-button {
 		&:disabled {
 			background: rgba(255, 255, 255, 0.1);
 			color: rgba(255, 255, 255, 0.4);
@@ -2095,11 +2474,16 @@
 		}
 
 		&:not(:disabled):hover {
-			filter: brightness(1.1);
+			filter: brightness(1.5);
+			box-shadow:
+				inset 0 0 0 1px rgba(255, 255, 255, 0.025),
+				inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
+				inset 0 -2px 0 0 rgba(0, 0, 0, 0.25);
 		}
 
 		&:not(:disabled):active {
 			transform: scale(0.98);
+			transition-duration: 0ms;
 		}
 	}
 
@@ -2132,6 +2516,17 @@
 		justify-content: center;
 		gap: 0;
 		padding: 0.75rem;
+	}
+
+	.bonus-balance,
+	.bonus-bet-label {
+		> span:not(:last-child) {
+			margin-bottom: 0.25rem;
+		}
+
+		> strong {
+			font-size: 1.125em;
+		}
 	}
 
 	.bonus-bet-controls {
@@ -2176,16 +2571,8 @@
 		justify-content: center;
 		align-self: stretch;
 		border: 0;
-		border-radius: .3125rem;
+		border-radius: 0.3125rem;
 		text-align: center;
-
-		&:hover {
-			background: rgba(255, 255, 255, 0.25);
-
-			> strong {
-				text-decoration: underline;
-			}
-		}
 	}
 
 	.bonus-confirm-backdrop {
@@ -2207,7 +2594,9 @@
 		border: 2px solid var(--ui-border);
 		border-radius: 1rem;
 		background: rgba(0, 0, 0, 0.9);
-		box-shadow: var(--ui-shadow-panel), 0 24px 80px rgba(0, 0, 0, 0.55);
+		box-shadow:
+			var(--ui-shadow-panel),
+			0 24px 80px rgba(0, 0, 0, 0.55);
 		animation: bonus-appear 300ms both;
 
 		h3 {
@@ -2261,7 +2650,10 @@
 	.confirm-action-button {
 		background: currentColor;
 		color: var(--ui-accent);
-		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.125), inset 0 1px 0 0 rgba(255, 255, 255, 0.25), inset 0 -2px 0 0 rgba(0, 0, 0, 0.25);
+		box-shadow:
+			inset 0 0 0 1px rgba(255, 255, 255, 0.125),
+			inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
+			inset 0 -2px 0 0 rgba(0, 0, 0, 0.25);
 
 		span {
 			color: #ffffff;
@@ -2410,8 +2802,16 @@
 			border-radius: 0.5rem;
 			background: rgba(0, 0, 0, 0.6);
 			pointer-events: none;
-			mask-image: radial-gradient(circle 40px at calc(100% - 32px) 50%, transparent 40px, #000 40.01px);
-			-webkit-mask-image: radial-gradient(circle 40px at calc(100% - 32px) 50%, transparent 40px, #000 40.01px);
+			mask-image: radial-gradient(
+				circle 40px at calc(100% - 32px) 50%,
+				transparent 40px,
+				#000 40.01px
+			);
+			-webkit-mask-image: radial-gradient(
+				circle 40px at calc(100% - 32px) 50%,
+				transparent 40px,
+				#000 40.01px
+			);
 		}
 
 		.info-content {
@@ -2491,7 +2891,7 @@
 		.desktop-mini-button {
 			width: 1.75rem;
 			height: 1.75rem;
-			border-radius: .3125rem;
+			border-radius: 0.3125rem;
 		}
 
 		.mobile-only-modal {
@@ -2565,28 +2965,26 @@
 
 	@keyframes loading-text-gradient {
 		0% {
-			background:
-				linear-gradient(
-					to right,
-					var(--ui-loading-from) 0%,
-					var(--ui-loading-to) 12%,
-					var(--ui-loading-from) 24%,
-					var(--ui-loading-from) 100%
-				);
+			background: linear-gradient(
+				to right,
+				var(--ui-loading-from) 0%,
+				var(--ui-loading-to) 12%,
+				var(--ui-loading-from) 24%,
+				var(--ui-loading-from) 100%
+			);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			background-size: 300% auto;
 			background-position: -50%;
 		}
 		100% {
-			background:
-				linear-gradient(
-					to right,
-					var(--ui-loading-from) 0%,
-					var(--ui-loading-to) 12%,
-					var(--ui-loading-from) 24%,
-					var(--ui-loading-from) 100%
-				);
+			background: linear-gradient(
+				to right,
+				var(--ui-loading-from) 0%,
+				var(--ui-loading-to) 12%,
+				var(--ui-loading-from) 24%,
+				var(--ui-loading-from) 100%
+			);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			background-size: 300% auto;

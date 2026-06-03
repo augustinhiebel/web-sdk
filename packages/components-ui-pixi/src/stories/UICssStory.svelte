@@ -69,6 +69,7 @@
 		width: 100vw;
 		height: 100vh;
 		min-height: 520px;
+		overflow: hidden;
 		display: grid;
 		place-items: center;
 		padding: 0;
