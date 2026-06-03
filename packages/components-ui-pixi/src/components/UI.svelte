@@ -3,7 +3,7 @@
 
 	import { stateUi } from 'state-shared';
 
-	import UIDefault from './UIDefault.svelte';
+	import UIDefaultCss from './UIDefaultCss.svelte';
 	import UIReplay from './UIReplay.svelte';
 
 	type Props = {
@@ -14,7 +14,7 @@
 	const props: Props = $props();
 
 	const UI_COMPONENT_MAP = {
-		default: UIDefault,
+		default: UIDefaultCss,
 		replay: UIReplay,
 	};
 
