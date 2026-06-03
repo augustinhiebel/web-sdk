@@ -867,7 +867,7 @@
 		<div class="desktop-controls">
 			{#if hasActiveBonus}
 				<div class="desktop-active-bonus">
-					<span>BONUS {activeBonus?.name} ACTIVATED</span>
+					<div><span class="loading-text">BONUS {activeBonus?.name} ACTIVATED</span></div>
 				</div>
 			{/if}
 
@@ -1220,6 +1220,7 @@
 	}
 	.ui-root {
 		--ui-accent: #fa0000;
+		--ui-bonus-accent: #FFE300;
 		--ui-black: rgba(0, 0, 0, 0.7);
 		--ui-black-strong: rgba(0, 0, 0, 0.95);
 		--ui-white-soft: rgba(255, 255, 255, 0.7);
@@ -1359,15 +1360,15 @@
 		flex-shrink: 0;
 
 		&.is-active {
-			background: var(--ui-accent);
-			color: #ffffff;
+			background: var(--ui-bonus-accent);
+			color: #000000;
 		}
 	}
 
 	.glass-button {
 		&.is-active {
-			background: var(--ui-accent);
-			color: #ffffff;
+			background: var(--ui-bonus-accent);
+			color: #000000;
 		}
 	}
 
@@ -1591,7 +1592,7 @@
 
 	.label-group-win strong,
 	.accent-text {
-		color: var(--ui-accent) !important;
+		color: var(--ui-bonus-accent) !important;
 	}
 
 	.mobile-bet-anchor {
@@ -2070,13 +2071,21 @@
 		}
 
 		&.activate {
-			background: #ffffff;
+			background: var(--ui-bonus-accent);
 			color: #000000;
+
+			span {
+				color: #000000;
+			}
 		}
 
 		&.active {
-			background: var(--ui-accent);
-			color: #ffffff;
+			background: var(--ui-bonus-accent);
+			color: #000000;
+
+			span {
+				color: #000000;
+			}
 		}
 
 		&:disabled {
@@ -2259,7 +2268,7 @@
 		}
 
 		&.activate {
-			background: var(--ui-accent);
+			background: var(--ui-bonus-accent);
 			color: #000000;
 
 			span {
@@ -2275,13 +2284,13 @@
 	}
 
 	.active-bonus-banner {
-		position: fixed;
+		position: absolute;
 		inset: 0 0 auto;
 		height: 2rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: var(--ui-accent);
+		background: var(--ui-bonus-accent);
 		color: #000000;
 		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
 		animation: fade-out 3200ms both;
@@ -2291,6 +2300,28 @@
 			font-size: 0.875rem;
 			font-weight: 700;
 		}
+	}
+
+	.loading-text {
+		--ui-loading-from: var(--ui-bonus-accent);
+		--ui-loading-to: #ffffff;
+
+		background: linear-gradient(
+			to right,
+			var(--ui-loading-from) 0%,
+			var(--ui-loading-to) 12%,
+			var(--ui-loading-from) 24%,
+			var(--ui-loading-from) 100%
+		);
+		background-size: 300% auto;
+		background-position: -50%;
+		background-clip: text;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		color: transparent;
+		font-size: 0.875rem;
+		font-weight: 700;
+		animation: loading-text-gradient 1.5s linear infinite;
 	}
 
 	@container universal-ui (min-width: 640px) {
@@ -2331,17 +2362,17 @@
 			align-items: center;
 			justify-content: center;
 			transform: translateY(-100%);
+			animation: fade-out 3200ms both;
 			pointer-events: none;
 
-			span {
+			> div {
 				border-radius: 999px;
-				background: var(--ui-black);
+				background-color: var(--ui-black);
 				padding: 0.25rem 1rem;
 				color: #ffffff;
 				font-size: 0.875rem;
 				font-weight: 700;
 				box-shadow: var(--ui-shadow-panel);
-				animation: fade-out 3200ms both;
 			}
 		}
 
@@ -2529,6 +2560,37 @@
 		to {
 			opacity: 1;
 			transform: translateY(0) scale(1);
+		}
+	}
+
+	@keyframes loading-text-gradient {
+		0% {
+			background:
+				linear-gradient(
+					to right,
+					var(--ui-loading-from) 0%,
+					var(--ui-loading-to) 12%,
+					var(--ui-loading-from) 24%,
+					var(--ui-loading-from) 100%
+				);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-size: 300% auto;
+			background-position: -50%;
+		}
+		100% {
+			background:
+				linear-gradient(
+					to right,
+					var(--ui-loading-from) 0%,
+					var(--ui-loading-to) 12%,
+					var(--ui-loading-from) 24%,
+					var(--ui-loading-from) 100%
+				);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-size: 300% auto;
+			background-position: -200%;
 		}
 	}
 
