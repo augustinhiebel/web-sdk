@@ -1,37 +1,37 @@
 :root {
-		font-size: 16px;
+	font-size: 16px;
+}
+.ui-root {
+	--ui-accent: #fa0000;
+	--ui-bonus-accent: #ffe300;
+	--ui-black: rgba(0, 0, 0, 0.7);
+	--ui-black-strong: rgba(0, 0, 0, 0.95);
+	--ui-white-soft: rgba(255, 255, 255, 0.7);
+	--ui-border: rgba(0, 0, 0, 0.7);
+	--ui-shadow-glass:
+		inset 0 0 0 1px rgba(255, 255, 255, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.55),
+		inset 0 -2px 4px 0 rgba(0, 0, 0, 0.25), inset 0 -2px 0 2px rgba(0, 0, 0, 0.25);
+	--ui-shadow-panel:
+		inset 0 0 0 1px rgba(255, 255, 255, 0.075), inset 0 1px 1px 0 rgba(255, 255, 255, 0.125);
+	--ui-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+	position: absolute;
+	inset: 0;
+	z-index: 10;
+	container: universal-ui / inline-size;
+	overflow: hidden;
+	color: var(--ui-accent);
+	font-family: Rubik, system-ui, sans-serif;
+	pointer-events: none;
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
 	}
-	.ui-root {
-		--ui-accent: #fa0000;
-		--ui-bonus-accent: #ffe300;
-		--ui-black: rgba(0, 0, 0, 0.7);
-		--ui-black-strong: rgba(0, 0, 0, 0.95);
-		--ui-white-soft: rgba(255, 255, 255, 0.7);
-		--ui-border: rgba(0, 0, 0, 0.7);
-		--ui-shadow-glass:
-			inset 0 0 0 1px rgba(255, 255, 255, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.55),
-			inset 0 -2px 4px 0 rgba(0, 0, 0, 0.25), inset 0 -2px 0 2px rgba(0, 0, 0, 0.25);
-		--ui-shadow-panel:
-			inset 0 0 0 1px rgba(255, 255, 255, 0.075), inset 0 1px 1px 0 rgba(255, 255, 255, 0.125);
-		--ui-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-		position: absolute;
-		inset: 0;
-		z-index: 10;
-		container: universal-ui / inline-size;
-		overflow: hidden;
-		color: var(--ui-accent);
-		font-family: Rubik, system-ui, sans-serif;
-		pointer-events: none;
-
-		*,
-		*::before,
-		*::after {
-			box-sizing: border-box;
-		}
-	}
-
-	.ui-root {
+.ui-root {
 	button {
 		appearance: none;
 		border: 0;
@@ -96,6 +96,7 @@
 		min-height: 2.75rem;
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		gap: 0.375rem;
 		padding: 0.75rem;
 		border-radius: 0.5rem;
@@ -304,7 +305,7 @@
 
 	.toggle-visible {
 		opacity: 1;
-		transform: rotate(0deg);
+		transform: rotate(0deg) translateY(-6%);
 	}
 
 	.mobile-extras-card {
@@ -379,8 +380,6 @@
 	}
 
 	.mobile-bet-anchor {
-		margin-left: auto;
-		flex: 1;
 		flex-shrink: 0;
 		display: flex;
 		flex-direction: column;
@@ -402,13 +401,16 @@
 
 	.bet-label-button,
 	.bonus-bet-label {
-		&:hover {
-			background: rgba(255, 255, 255, 0.25);
+		@container universal-ui (min-width: 640px) {
+			&:hover {
+				background: rgba(255, 255, 255, 0.25);
 
-			> strong {
-				text-decoration: underline;
+				> strong {
+					text-decoration: underline;
+				}
 			}
 		}
+
 		&:active {
 			transform: scale(0.98);
 			background: rgba(255, 255, 255, 0.1);
@@ -486,8 +488,10 @@
 	}
 
 	.settings-menu-info {
-		&:hover {
-			background: rgba(255, 255, 255, 0.25);
+		@container universal-ui (min-width: 640px) {
+			&:hover {
+				background: rgba(255, 255, 255, 0.25);
+			}
 		}
 	}
 
@@ -618,8 +622,10 @@
 		background: rgba(0, 0, 0, 0.5);
 		color: #ffffff;
 
-		&:hover {
-			background: rgba(255, 255, 255, 0.1);
+		@container universal-ui (min-width: 640px) {
+			&:hover {
+				background: rgba(255, 255, 255, 0.1);
+			}
 		}
 
 		svg {
@@ -664,8 +670,10 @@
 			outline-color: #ffffff;
 		}
 
-		&:hover {
-			background: rgba(255, 255, 255, 0.2);
+		@container universal-ui (min-width: 640px) {
+			&:hover {
+				background: rgba(255, 255, 255, 0.2);
+			}
 		}
 
 		&:active {
@@ -732,8 +740,10 @@
 	.bonus-close-button,
 	.bonus-bet-controls > button:not(.bonus-bet-label),
 	.confirm-cancel-button {
-		&:hover {
-			background: rgba(255, 255, 255, 0.15);
+		@container universal-ui (min-width: 640px) {
+			&:hover {
+				background: rgba(255, 255, 255, 0.15);
+			}
 		}
 		&:active {
 			transform: scale(0.98);
@@ -1131,6 +1141,7 @@
 		span {
 			font-size: 0.875rem;
 			font-weight: 700;
+			color: #000000;
 		}
 	}
 
@@ -1302,8 +1313,10 @@
 				background: rgba(0, 0, 0, 0.5);
 				color: #ffffff;
 
-				&:hover {
-					background: rgba(255, 255, 255, 0.25);
+				@container universal-ui (min-width: 640px) {
+					&:hover {
+						background: rgba(255, 255, 255, 0.25);
+					}
 				}
 
 				&:disabled {
@@ -1402,55 +1415,54 @@
 	&.ui-desktop-lock .desktop-controls {
 		display: flex;
 	}
+}
 
+@keyframes bonus-appear {
+	from {
+		opacity: 0;
+		transform: translateY(10px) scale(0.98);
 	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
 
-	@keyframes bonus-appear {
-		from {
-			opacity: 0;
-			transform: translateY(10px) scale(0.98);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0) scale(1);
-		}
+@keyframes loading-text-gradient {
+	0% {
+		background: linear-gradient(
+			to right,
+			var(--ui-loading-from) 0%,
+			var(--ui-loading-to) 12%,
+			var(--ui-loading-from) 24%,
+			var(--ui-loading-from) 100%
+		);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 300% auto;
+		background-position: -50%;
 	}
+	100% {
+		background: linear-gradient(
+			to right,
+			var(--ui-loading-from) 0%,
+			var(--ui-loading-to) 12%,
+			var(--ui-loading-from) 24%,
+			var(--ui-loading-from) 100%
+		);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 300% auto;
+		background-position: -200%;
+	}
+}
 
-	@keyframes loading-text-gradient {
-		0% {
-			background: linear-gradient(
-				to right,
-				var(--ui-loading-from) 0%,
-				var(--ui-loading-to) 12%,
-				var(--ui-loading-from) 24%,
-				var(--ui-loading-from) 100%
-			);
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-			background-size: 300% auto;
-			background-position: -50%;
-		}
-		100% {
-			background: linear-gradient(
-				to right,
-				var(--ui-loading-from) 0%,
-				var(--ui-loading-to) 12%,
-				var(--ui-loading-from) 24%,
-				var(--ui-loading-from) 100%
-			);
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-			background-size: 300% auto;
-			background-position: -200%;
-		}
+@keyframes fade-out {
+	0%,
+	72% {
+		opacity: 1;
 	}
-
-	@keyframes fade-out {
-		0%,
-		72% {
-			opacity: 1;
-		}
-		100% {
-			opacity: 0;
-		}
+	100% {
+		opacity: 0;
 	}
+}

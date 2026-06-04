@@ -14,6 +14,6 @@
 	</div>
 {:else}
 	<div class="active-bonus-banner">
-		<span class="loading-text">BONUS {name} ACTIVATED</span>
+		<span>BONUS {name} ACTIVATED</span>
 	</div>
 {/if}
