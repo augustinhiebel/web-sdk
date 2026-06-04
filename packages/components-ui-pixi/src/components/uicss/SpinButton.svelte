@@ -1,0 +1,38 @@
+<script lang="ts">
+	// @ts-nocheck
+	import AutobetCount from './AutobetCount.svelte';
+
+	type Props = {
+		selectedAutobetRounds?: string | number | null;
+		isIdle?: boolean;
+		disabled?: boolean;
+		buttonClass?: string;
+		press?: (event: MouseEvent) => void;
+	};
+
+	let {
+		selectedAutobetRounds = null,
+		isIdle = true,
+		disabled = false,
+		buttonClass = '',
+		press,
+	}: Props = $props();
+</script>
+
+<button
+	aria-label={selectedAutobetRounds ? 'Stop auto bet' : isIdle ? 'Bet / spin' : 'Stop'}
+	type="button"
+	onclick={(event) => press?.(event)}
+	{disabled}
+	class={`spin-button ${buttonClass}`}
+>
+	{#if selectedAutobetRounds}
+		<AutobetCount value={selectedAutobetRounds} />
+	{:else}
+		<svg class="spin-icon" viewBox="0 0 24 24">
+			<path
+				d="M23.216,9.216l-1.549-9.297l-3.198,3.198C16.599,1.75,14.356,1,12,1C5.935,1,1,5.935,1,12s4.935,11,11,11 c4.374,0,8.332-2.59,10.084-6.599c0.221-0.506-0.01-1.096-0.516-1.317c-0.505-0.219-1.095,0.01-1.317,0.516 C18.818,18.88,15.579,21,12,21c-4.962,0-9-4.038-9-9s4.038-9,9-9c1.821,0,3.562,0.544,5.039,1.547l-3.12,3.12L23.216,9.216z"
+			/>
+		</svg>
+	{/if}
+</button>
