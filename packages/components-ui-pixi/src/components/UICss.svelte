@@ -1618,7 +1618,6 @@
 		inset-inline: 0;
 		bottom: 0;
 		z-index: 10;
-		width: min(770px, 100%);
 		margin-inline: auto;
 		display: flex;
 		flex-direction: column;
@@ -1918,7 +1917,6 @@
 
 	.label-button {
 		min-width: 0;
-		flex: 1;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
@@ -1928,7 +1926,6 @@
 
 	.label-group {
 		min-width: 0;
-		flex: 1;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -2734,6 +2731,8 @@
 		.desktop-controls {
 			position: relative;
 			width: 100%;
+			max-width: 770px;
+			margin-inline: auto;
 			height: 3.5rem;
 			display: flex;
 			align-items: center;

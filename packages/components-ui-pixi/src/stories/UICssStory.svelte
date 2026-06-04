@@ -72,6 +72,7 @@
 		overflow: hidden;
 		display: grid;
 		place-items: center;
+		container: story-shell / inline-size;
 		padding: 0;
 		background:
 			radial-gradient(circle at 24% 18%, rgba(94, 255, 174, 0.18), transparent 28%),
@@ -80,20 +81,34 @@
 
 	.story-shell-mobile {
 		min-height: 760px;
-		padding: 16px;
+		padding: 0;
 	}
 
 	.mock-game {
 		position: relative;
-		width: min(1200px, 100%);
-		aspect-ratio: 16 / 9;
+		width: 100%;
+
 		overflow: hidden;
 		border: 1px solid rgba(255, 255, 255, 0.14);
 		border-radius: 18px;
-		background:
-			linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
-			#131922;
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)), #131922;
 		box-shadow: 0 30px 80px rgba(0, 0, 0, 0.46);
+	}
+
+	@container story-shell (min-width: 640px) {
+		.mock-game {
+			width: min(1200px, 100%);
+			aspect-ratio: 16 / 9;
+		}
+	}
+	
+	@container story-shell (max-width: 640px) {
+		.mock-game {
+			width: min(390px, 100%);
+			height: min(844px, calc(100vh - 32px));
+			aspect-ratio: auto;
+			border-radius: 22px;
+		}
 	}
 
 	.story-shell-mobile .mock-game {
