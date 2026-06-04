@@ -10,7 +10,8 @@
 		| 'bonus-modal'
 		| 'bonus-confirmation'
 		| 'autoplay'
-		| 'bonus-active';
+		| 'bonus-active'
+		| 'free-spins';
 
 	type Props = {
 		variant?: Variant;
@@ -26,6 +27,7 @@
 	const isBonusConfirmation = $derived(variant === 'bonus-confirmation');
 	const isAutoplay = $derived(variant === 'autoplay');
 	const isBonusActive = $derived(variant === 'bonus-active');
+	const isFreeSpins = $derived(variant === 'free-spins');
 	const balance = $derived(isBonusActive ? '$2,410.00' : '$2,450.00');
 	const win = $derived(isAutoplay ? '$12.40' : isBonusActive ? '$840.00' : '$0.00');
 	const bet = $derived(isBonusActive ? '$20.00' : '$10.00');
@@ -48,7 +50,7 @@
 			{win}
 			{bet}
 			showWin={isAutoplay || isBonusActive}
-			showExtras={isBonusActive}
+			showExtras={isBonusActive || isFreeSpins}
 			{menuOpen}
 			betOptionsOpen={isBet}
 			autobetOptionsOpen={isAutobetOptions}
